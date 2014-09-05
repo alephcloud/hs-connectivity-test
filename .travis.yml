@@ -1,0 +1,9 @@
+language: haskell
+ghc:
+    - 7.6
+    - 7.8
+install:
+    - cabal install Cabal --constraint='Cabal>=1.20' --constraint='directory>=1.2.1.0'
+    - cabal install --only-dependencies
+script:
+    - cabal configure --enable-tests && cabal build

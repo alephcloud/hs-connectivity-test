@@ -1,0 +1,105 @@
+-- ------------------------------------------------------ --
+-- Copyright © 2014 AlephCloud Systems, Inc.
+-- ------------------------------------------------------ --
+
+Name: connectivity-test
+Version: 0.1
+Synopsis: Tools for Testing Network Connectivity
+Description:
+    This package contains tools for testing network connectivity.
+    .
+    Currently the following tests are included:
+    .
+    * Socket allocation,
+    .
+    * Name resolution,
+    .
+    * TCP connection,
+    .
+    * ICMP ping,
+    .
+    * ICMP traceroute,
+    .
+    * UDP connection.
+    .
+    On UNIX systems the ICMP and UDP based tests require elevated
+    (root) rights. On Windows systems this is not required for ICMP.
+    .
+    In the current version only IPv4 is supported.
+
+Homepage: http://github.com/alephcloud/hs-connectivity-test
+License: MIT
+License-file: LICENSE
+Author: Lars Kuhtz <lars@alephcloud.com>
+Maintainer: Lars Kuhtz <lars@alephcloud.com>
+Copyright: (c) 2014 AlephCloud, Inc.
+Category: Network
+Build-type: Custom
+
+cabal-version: >= 1.20
+
+extra-doc-files:
+    README.md,
+    CHANGELOG.md
+
+extra-source-files:
+    constraints
+
+source-repository head
+    type: git
+    location: https://github.com/alephcloud/hs-connectivity-test.git
+
+source-repository this
+    type: git
+    location: https://github.com/alephcloud/hs-connectivity-test.git
+    tag: 0.1
+
+Library
+    default-language: Haskell2010
+    hs-source-dirs: src
+
+    exposed-modules:
+        Network.ConnectivityTest
+
+    if os(windows)
+        exposed-modules:
+            Network.WinIcmp
+
+    build-depends:
+        base == 4.*,
+        base-unicode-symbols >= 0.2,
+        bytestring >= 0.10,
+        case-insensitive >= 1.2,
+        configuration-tools >= 0.2,
+        errors >= 1.4.7,
+        lens >= 4.2,
+        lifted-base >= 0.2,
+        monad-control >= 0.3,
+        network >= 2.5,
+        optparse-applicative >= 0.9,
+        text >= 1.1,
+        time >= 1.4,
+        transformers >= 0.3
+
+    ghc-options: -Wall
+
+executable connectivity-test
+    default-language: Haskell2010
+    hs-source-dirs: main
+    main-is: Main.hs
+
+    build-depends:
+        base == 4.*,
+        connectivity-test,
+        configuration-tools >= 0.2.4,
+        errors >= 1.4.7,
+        network >= 2.5,
+        text >= 1.1
+
+    ghc-options: -Wall -threaded -with-rtsopts=-N
+
+    if os(windows)
+        extra-libraries:
+            Iphlpapi
+            Kernel32
+
